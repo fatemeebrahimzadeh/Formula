@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import "./App.css"
+import Tag from './fakeData/Tags/Tags';
+import FormulaRenderContentComponent, { IFormulaPropsContext } from './FormulaRenderContentComponent/FormulaRenderContentComponent';
+
+export const FormulaContext = React.createContext<IFormulaPropsContext | undefined>(undefined);
 
 function App() {
+
+  const [FRM, onChangeHandler] = useState("")
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <FormulaContext.Provider
+        value={{
+          tags: Tag(),
+          FRM: FRM,
+          onChangeHandler: (value) => { onChangeHandler(value.toString()) },
+          isSubmited: false
+        }}>
+        <FormulaRenderContentComponent />
+      </FormulaContext.Provider>
     </div>
   );
 }

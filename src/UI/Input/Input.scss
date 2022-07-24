@@ -1,0 +1,24 @@
+$danger: #f44336;
+
+.custom-input {
+  position: relative;
+}
+
+.invalid-input {
+  input {
+    border-color: $danger !important;
+  }
+
+  .validation-group-messages {
+    font-size: 14px;
+    color: $danger;
+    position: absolute;
+    width: 100%;
+    .error-message{
+      position: absolute;
+      width: 100%;
+      left: 50%;
+      left: 0;
+    }
+  }
+}
