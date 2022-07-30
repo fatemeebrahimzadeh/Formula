@@ -4,7 +4,6 @@ import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormulaContext, IFormulaPropsContext, isOperationOrParenthesBefore } from "../../../FormulaRenderContentComponent";
 import TextArea from "../../../../UI/TextArea/TextArea";
-import Toast from "../../../../utils/toast";
 
 export type INumberKeys = "7" | "8" | "9" | "4" | "5" | "6" | "1" | "2" | "3" | "<-" | "0" | "."
 
@@ -61,10 +60,7 @@ export default function NumPanelHook(): JSX.Element {
                 setNumPanelTextArea("")
             }
         } else {
-            Toast.show({
-                message: "You can't add number without operation",
-                type: "warning"
-            })
+            console.log("You can't add number without operation")
         }
 
     }

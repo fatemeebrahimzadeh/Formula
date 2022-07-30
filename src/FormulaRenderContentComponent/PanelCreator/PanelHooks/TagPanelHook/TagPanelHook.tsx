@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { FormulaContext, IFormulaPropsContext, IMainArray, isOperationOrParenthesBefore } from "../../../FormulaRenderContentComponent";
 import { ITag } from "../../../../@types/entities/tag";
 import Input from "../../../../UI/Input/Input";
-import Toast from "../../../../utils/toast";
 
 export interface ITagWithMode extends ITag {
     mode: "ordinary" | "selected",
@@ -108,10 +107,7 @@ export default function TagPanelHook(): JSX.Element {
                 propsContext!.setMainVarible(value!.concat(selectedTag!))
             }
         } else {
-            Toast.show({
-                message: "You can't add tag without operation",
-                type: "warning"
-            })
+            console.log("You can't add tag without operation")
         }
 
     }

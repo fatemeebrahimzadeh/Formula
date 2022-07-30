@@ -6,7 +6,6 @@ import TagPanelCreator from "./PanelCreator/TagPanelCreator/TagPanelCreator";
 import MultipleTagsPanelCreator from "./PanelCreator/MultipleTagsPanelCreator/MultipleTagsPanelCreator";
 import { ITag } from "../@types/entities/tag";
 import TextArea, { ITextAreaValidationRules } from "../UI/TextArea/TextArea";
-import Toast from "../utils/toast";
 import { GlobalEvent } from "../utils/event-emitter";
 import { TEXTAREA_VALIDATION } from "../@types/events";
 
@@ -181,10 +180,7 @@ const FormulaRenderContentComponent: FC<IProps> = (props) => {
         switch (key) {
             case "*": case "+": case "/": case ")":
                 if (value!.length === 0 || isOperationOrParenthesBefore(value)) {
-                    Toast.show({
-                        message: "You can't add this operation",
-                        type: "warning"
-                    })
+                    console.log("You can't add this operation")
                 } else {
                     value.push(key + " ")
                 }
@@ -193,18 +189,12 @@ const FormulaRenderContentComponent: FC<IProps> = (props) => {
                 if (value!.length === 0 || isOperationOrParenthesBefore(value)) {
                     value.push(key + " ")
                 } else {
-                    Toast.show({
-                        message: "You can't add this operation",
-                        type: "warning"
-                    })
+                    console.log("You can't add this operation")
                 }
                 break;
             case "-":
                 if (isOperationOrParenthesBefore(value)) {
-                    Toast.show({
-                        message: "You can't add this operation",
-                        type: "warning"
-                    })
+                    console.log("You can't add this operation")
                 } else {
                     value.push(key + " ")
                 }

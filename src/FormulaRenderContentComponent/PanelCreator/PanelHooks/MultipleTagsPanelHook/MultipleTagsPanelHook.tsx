@@ -8,7 +8,6 @@ import { ITagWithMode } from "../TagPanelHook/TagPanelHook"
 import { ITag } from "../../../../@types/entities/tag";
 import Input from "../../../../UI/Input/Input";
 import Checkbox from "../../../../UI/Checkbox/Checkbox";
-import Toast from "../../../../utils/toast";
 
 export default function MultipleTagsPanelHook(): JSX.Element {
 
@@ -120,10 +119,7 @@ export default function MultipleTagsPanelHook(): JSX.Element {
                 propsContext!.setMainVarible(value!.concat(selectedTags))
             }
         } else {
-            Toast.show({
-                message: "You can't add tags without operation",
-                type: "warning"
-            })
+            console.log("You can't add tags without operation")
         }
     }
 
