@@ -1,25 +1,15 @@
 import React, { useState } from 'react';
 import "./App.css"
 import Tag from './fakeData/Tags/Tags';
-import FormulaRenderContentComponent, { IFormulaPropsContext } from './FormulaRenderContentComponent/FormulaRenderContentComponent';
-
-export const FormulaContext = React.createContext<IFormulaPropsContext | undefined>(undefined);
+import FormulaRenderContentComponent from './FormulaRenderContentComponent/FormulaRenderContentComponent';
 
 function App() {
 
-  const [FRM, onChangeHandler] = useState("")
+  const [FRM, onChangeHandler] = useState<string>("")
 
   return (
     <div className='App'>
-      <FormulaContext.Provider
-        value={{
-          tags: Tag(),
-          FRM: FRM,
-          onChangeHandler: (value) => { onChangeHandler(value.toString()) },
-          isSubmited: false
-        }}>
-        <FormulaRenderContentComponent />
-      </FormulaContext.Provider>
+      <FormulaRenderContentComponent FRM={FRM} onChangeHandler={(value) => { onChangeHandler(value) }} tags={Tag()} />
     </div>
   );
 }

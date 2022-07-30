@@ -1,33 +1,18 @@
-import "./TagPanel.scss"
-import { PanelCreator, Panel } from "../PanelCreator"
+import "./TagPanelHook.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useContext, useState } from "react";
-import { IFormulaPropsContext } from "../../FormulaRenderContentComponent";
-import { ITag } from "../../../@types/entities/tag";
-import Toast from "../../../utils/toast";
-import { FormulaContext } from "../../../App";
-import Input from "../../../UI/Input/Input";
-
-class TagPanelCreator extends PanelCreator {
-    public factoryMethod(): Panel {
-        return new TagPanel();
-    }
-}
-export default TagPanelCreator
+import { useContext, useEffect, useState } from "react";
+import { FormulaContext, IFormulaPropsContext, IMainArray, isOperationOrParenthesBefore } from "../../../FormulaRenderContentComponent";
+import { ITag } from "../../../../@types/entities/tag";
+import Input from "../../../../UI/Input/Input";
+import Toast from "../../../../utils/toast";
 
 export interface ITagWithMode extends ITag {
     mode: "ordinary" | "selected",
     visibility: "hidden" | "visible"
 }
 
-class TagPanel implements Panel {
-    public panelCreator(): JSX.Element {
-        return <TagPanelHook />;
-    }
-}
-
-function TagPanelHook(): JSX.Element {
+export default function TagPanelHook(): JSX.Element {
 
     //#region Context
 
@@ -56,6 +41,10 @@ function TagPanelHook(): JSX.Element {
 
         setTagsWithMode(visibleTags)
     }
+
+    useEffect(() => {
+        searchOnClickHandler()
+    }, [searchInput])
 
     //#endregion
 
@@ -87,41 +76,36 @@ function TagPanelHook(): JSX.Element {
         }))
     }
 
+    const tagsOnWheelHandler = (event: React.WheelEvent<HTMLDivElement>) => {
+        event.preventDefault();
+
+        event.currentTarget.scrollBy({
+            top: event.deltaY < 0 ? -30 : 30,
+        });
+    }
+
     //#endregion
 
     //#region upload tags to Formula textArea
 
     const uploadOnClickHanlder = () => {
 
-        let selectedTID: string = "@"
-        let selectedTag: ITag
-        let stringAndTagArray: (string | ITag)[] = propsContext!.mainVarible!
+        let isSelectedTag: boolean = false
 
-        if (stringAndTagArray!.length === 0 || stringAndTagArray![stringAndTagArray!.length - 1] === "(" || stringAndTagArray![stringAndTagArray!.length - 1] === "+" || stringAndTagArray![stringAndTagArray!.length - 1] === "-" || stringAndTagArray![stringAndTagArray!.length - 1] === "*" || stringAndTagArray![stringAndTagArray!.length - 1] === "/") {
+        let selectedTag: ITag
+        let value: IMainArray = [...propsContext!.mainVarible]
+
+        if (value!.length === 0 || isOperationOrParenthesBefore(value)) {
             setTagsWithMode(tagsWithMode.map((tag) => {
                 if (tag.mode === "selected") {
-                    selectedTID = selectedTID + tag.TID
+                    isSelectedTag = true
                     selectedTag = tag
                 }
                 return { ...tag, mode: "ordinary" }
             }))
 
-            if (selectedTID !== "@") {
-
-                let concatedStringAndTagValueWithSlectedTagTID = stringAndTagArray!.concat(selectedTag!)
-                propsContext!.setMainVarible!(concatedStringAndTagValueWithSlectedTagTID)
-
-                // let stringArray: string[] = []
-                // propsContext!.mainVarible!.map((i, index) => {
-                //     if (typeof (i) === "string") {
-                //         stringArray.push(i)
-                //     } else {
-                //         stringArray.push((i as ITag).TID)
-                //     }
-                // })
-
-                // let concatedStringValueWithSelectedTagTID = stringArray!.concat(selectedTID)
-                // propsContext!.setFormulaTextArea!(concatedStringValueWithSelectedTagTID.join(""))
+            if (isSelectedTag) {
+                propsContext!.setMainVarible(value!.concat(selectedTag!))
             }
         } else {
             Toast.show({
@@ -151,7 +135,9 @@ function TagPanelHook(): JSX.Element {
             onClick={uploadOnClickHanlder}>
             <FontAwesomeIcon icon={faUpload} />
         </button>
-        <div className="TagPanel__Tags">
+        <div
+            onWheel={tagsOnWheelHandler}
+            className="TagPanel__Tags">
             {tagsElement}
         </div>
     </div>

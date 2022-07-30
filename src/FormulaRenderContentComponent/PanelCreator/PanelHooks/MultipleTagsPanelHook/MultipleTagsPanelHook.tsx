@@ -1,30 +1,16 @@
-import "./MultipleTagsPanel.scss"
-import { PanelCreator, Panel } from "../PanelCreator"
-import { useContext, useState } from "react";
-import { IFormulaPropsContext } from "../../FormulaRenderContentComponent";
+
+import { useContext, useEffect, useState } from "react";
+import "./MultipleTagsPanelHook.scss"
+import { FormulaContext, IFormulaPropsContext, IMainArray, isOperationOrParenthesBefore } from "../../../FormulaRenderContentComponent";
 import { faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ITagWithMode } from "../TagPanel/TagPanel";
-import { FormulaContext } from "../../../App";
-import Toast from "../../../utils/toast";
-import { ITag } from "../../../@types/entities/tag"
-import Input from "../../../UI/Input/Input";
-import Checkbox from "../../../UI/Checkbox/Checkbox";
+import { ITagWithMode } from "../TagPanelHook/TagPanelHook"
+import { ITag } from "../../../../@types/entities/tag";
+import Input from "../../../../UI/Input/Input";
+import Checkbox from "../../../../UI/Checkbox/Checkbox";
+import Toast from "../../../../utils/toast";
 
-class MultipleTagsCreator extends PanelCreator {
-    public factoryMethod(): Panel {
-        return new MultipleTags();
-    }
-}
-export default MultipleTagsCreator
-
-class MultipleTags implements Panel {
-    public panelCreator(): JSX.Element {
-        return <MultipleTagsHook />;
-    }
-}
-
-function MultipleTagsHook(): JSX.Element {
+export default function MultipleTagsPanelHook(): JSX.Element {
 
     //#region Context
 
@@ -54,6 +40,10 @@ function MultipleTagsHook(): JSX.Element {
 
     }
 
+    useEffect(() => {
+        searchOnClickHandler()
+    }, [searchInput])
+
     //#endregion
 
     //#region tagsSelection
@@ -64,8 +54,17 @@ function MultipleTagsHook(): JSX.Element {
         })
     )
 
+    useEffect(() => {
+        setTagsWithMode(
+            propsContext!.tags.map(tag => {
+                return { ...tag, mode: "ordinary", visibility: "visible" }
+            })
+        )
+    }, [propsContext!.tagsAndNumbersTabMode])
+
     const tagsElement = tagsWithMode.map((tag, index) => {
         return <div
+            key={index}
             className={`MultipleTags__Tag ${tag.mode === "ordinary" ? "MultipleTags__Tag--ordinary" : "MultipleTags__Tag--selected"} ${tag.visibility === "visible" ? "MultipleTags__Tag--visible" : "MultipleTags__Tag--hidden"}`}
             onClick={() => { tagsModeOnClickHandler(tag) }}>
             {tag.TID}
@@ -84,50 +83,41 @@ function MultipleTagsHook(): JSX.Element {
         }))
     }
 
+    const tagsOnWheelHandler = (event: React.WheelEvent<HTMLDivElement>) => {
+        event.preventDefault();
+
+        event.currentTarget.scrollBy({
+            top: event.deltaY < 0 ? -30 : 30,
+        });
+    }
+
     //#endregion
 
     //#region upload tags to Formula textArea
 
     const uploadOnClickHanlder = () => {
 
-        let selectedTagsTID: string[] = []
-        let selectedTags: (ITag | string)[] = []
-        let stringAndTagArray = propsContext!.mainVarible!
+        let isSelectedTag: boolean = false
 
-        if (stringAndTagArray!.length === 0 || stringAndTagArray![stringAndTagArray!.length - 1] === "(" || stringAndTagArray![stringAndTagArray!.length - 1] === "+" || stringAndTagArray![stringAndTagArray!.length - 1] === "-" || stringAndTagArray![stringAndTagArray!.length - 1] === "*" || stringAndTagArray![stringAndTagArray!.length - 1] === "/") {
+        let selectedTags: IMainArray = []
+        let value = [...propsContext!.mainVarible]
 
-            // selectedTagsTID.push(`${propsContext!.tagsAndNumbersTabMode}( `)
-            selectedTags.push(`${propsContext!.tagsAndNumbersTabMode}( `)
+        if (value!.length === 0 || isOperationOrParenthesBefore(value)) {
+
+            selectedTags.push(`${propsContext!.tagsAndNumbersTabMode.toLocaleUpperCase()}( `)
 
             setTagsWithMode(tagsWithMode.map((tag) => {
                 if (tag.mode === "selected") {
-                    selectedTagsTID.push("@" + tag.TID + ", ")
+                    isSelectedTag = true
                     selectedTags.push(tag)
                 }
                 return { ...tag, mode: "ordinary" }
             }))
 
-            // let lastItem = selectedTagsTID.pop()!.split(",")
-            // selectedTagsTID.push(lastItem[0])
-            // selectedTagsTID.push(` )`)
-
             selectedTags.push(") ")
 
-            if (selectedTagsTID.length !== 0) {
-                let concatedStringAndTagValueWithSlectedTagsTID: (ITag | string)[] = stringAndTagArray!.concat(selectedTags)
-                propsContext!.setMainVarible!(concatedStringAndTagValueWithSlectedTagsTID)
-
-                // let stringArray: string[] = []
-                // propsContext!.mainVarible!.map((i, index) => {
-                //     if (typeof (i) === "string") {
-                //         stringArray.push(i)
-                //     } else {
-                //         stringArray.push((i as ITag).TID)
-                //     }
-                // })
-
-                // let concatedStringValueWithSelectedTagsTID = stringArray!.concat(selectedTagsTID)
-                // propsContext!.setFormulaTextArea!(concatedStringValueWithSelectedTagsTID.join(""))
+            if (isSelectedTag) {
+                propsContext!.setMainVarible(value!.concat(selectedTags))
             }
         } else {
             Toast.show({
@@ -156,7 +146,9 @@ function MultipleTagsHook(): JSX.Element {
             onClick={uploadOnClickHanlder}>
             <FontAwesomeIcon icon={faUpload} />
         </button>
-        <div className="MultipleTags__Tags">
+        <div
+            onWheel={tagsOnWheelHandler}
+            className="MultipleTags__Tags">
             {tagsElement}
         </div>
     </div>

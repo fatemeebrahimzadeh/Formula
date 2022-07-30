@@ -1,7 +1,13 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import FormulaRenderContentComponent, { IProps } from "./FormulaRenderContentComponent";
 
-const defaultProps: IProps = {}
+const defaultProps: IProps = {
+    FRM: "",
+    onChangeHandler: function (value: string): void {
+        throw new Error("Function not implemented.");
+    },
+    tags: []
+}
 
 const setup = (props: IProps = defaultProps) => {
     render(<FormulaRenderContentComponent {...props} />)

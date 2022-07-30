@@ -1,34 +1,54 @@
+$danger: #f44336;
+
 .Textarea {
-    resize: none;
-    border: 1px solid #e2e2e2;
-    border-radius: 5px;
-    outline: none;
-    cursor: default;
+    .Textarea__feild {
+        resize: none;
+        border: 1px solid #a8a8a8;
+        border-radius: 5px;
+        outline: none;
+        cursor: default;
 
-    &::-webkit-scrollbar {
-        height: 7px;
-        background-color: #e8e8e8;
+        &::-webkit-scrollbar {
+            height: 7px;
+            background-color: #e8e8e8;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #464255;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #464255;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        &::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #e8e8e8;
+            border-radius: 2px;
+        }
+
+        &::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #e8e8e8;
+            border-radius: 2px;
+        }
     }
 
-    &::-webkit-scrollbar-thumb {
-        background-color: #464255;
-        border-radius: 2px;
-        cursor: pointer;
+    .invalid-textarea {
+        border: 1px solid $danger;
     }
 
-    &::-webkit-scrollbar-thumb {
-        background: #464255;
-        border-radius: 2px;
-        cursor: pointer;
-    }
-
-    &::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 5px #e8e8e8;
-        border-radius: 2px;
-    }
-
-    &::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 5px #e8e8e8;
-        border-radius: 2px;
+    .validation-group-messages {
+        font-size: 14px;
+        color: $danger;
+        position: absolute;
+        width: 100%;
+        .error-message {
+            position: absolute;
+            width: 100%;
+            left: 0;
+        }
     }
 }

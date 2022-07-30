@@ -25,6 +25,7 @@ export const UPDATE_DATABASE = 'UPDATE_DATABASE'
 export type update_database_entities = 'connections' | 'devices' | 'tags'
 
 export const FORM_VALIDATION = 'FORM_VALIDATION'
+export const TEXTAREA_VALIDATION = 'TEXTAREA_VALIDATION'
 
 export const SHOW_TOAST = 'SHOW_TOAST'
 export const CLEAR_ALL_TOAST = 'CLEAR_ALL_TOAST'

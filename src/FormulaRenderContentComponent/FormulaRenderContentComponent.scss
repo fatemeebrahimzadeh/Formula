@@ -1,107 +1,116 @@
 .FormulaRenderContentComponent {
     padding: 10px;
-    width: 45%;
+    width: 55%;
+    height: 40%;
+    display: grid;
+    grid-template-areas:
+        "Formula__textarea Formula__textarea"
+        "operationKeys tagsAndNumbers";
+    grid-template-columns: 20% 80%;
 
-    .Formula__textarea {
-        width: 100%;
-        height: 60px;
-        padding: 1px;
-        padding-left: 2px;
-        font-weight: 300;
-        font-size: 20px;
-        line-height: 50px;
+    .Textarea {
+        grid-area: Formula__textarea;
+        height: 80px;
+
+        .Formula__textarea {
+            height: 60px;
+            width: 100%;
+            padding: 3px;
+            padding-left: 5px;
+            font-weight: 300;
+            font-size: 20px;
+            line-height: 45px;
+        }
+
+        .validation-group-messages {
+            top: 70px;
+        }
     }
 
-    .textarea-error {
-        border: 1px solid #f44336;
+    .operationKeys {
+        grid-area: operationKeys;
+        display: grid;
+        grid-template-columns: 50% 50%;
+
+        .operationKey {
+            width: 65px;
+            height: 47px;
+            background: #464255;
+            border-radius: 5px;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 37px;
+            color: white;
+            border: none;
+            margin: 2px;
+            cursor: pointer;
+            transition: box-shadow 0.3s;
+
+            &:hover {
+                box-shadow: 0 0 11px #464255;
+            }
+        }
     }
 
-    .Formula__OperabilitySection {
+    .tagsAndNumbers {
+        grid-area: tagsAndNumbers;
         display: flex;
-        height: calc(100% - 60px);
 
-        .operationKeys {
-            width: 20%;
+        .tagsAndNumbers__Tabs {
+            width: 30%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
 
-            .operationKey {
-                width: 55px;
-                height: 37px;
-                background: #464255;
-                border-radius: 5px;
-                font-weight: 400;
-                font-size: 24px;
-                line-height: 40px;
-                color: white;
+            .tagsAndNumbers__Tab {
+                width: 100%;
+                height: 48px;
                 border: none;
-                margin: 2px;
+                background-color: #f5f4f9;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                justify-content: center;
                 cursor: pointer;
-                transition: box-shadow 0.3s;
+                transition: background-color 0.3s;
+
+                .Tab__Mark {
+                    height: 48px;
+                    border-radius: 0px 10px 10px 0px;
+                }
+
+                .Tab__Mark--open {
+                    width: 10px;
+                    background-color: #464255;
+                }
+
+                .Tab__Mark--close {
+                    width: 7px;
+                    background-color: #d0d6de;
+                }
 
                 &:hover {
-                    box-shadow: 0 0 11px #464255;
+                    .Tab__Mark {
+                        height: 48px;
+                        border-radius: 0px 10px 10px 0px;
+                        width: 10px;
+                        background-color: #d0d6de;
+                    }
                 }
+            }
+
+            .tagsAndNumbers__Tab--close {
+                background-color: white;
             }
         }
 
-        .tagsAndNumbers {
-            display: flex;
-            width: 80%;
-
-            .tagsAndNumbers__Tabs {
-                width: 30%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-
-                .tagsAndNumbers__Tab {
-                    width: 100%;
-                    height: 32px;
-                    border: none;
-                    background-color: #f5f4f9;
-                    display: flex;
-                    flex-direction: column;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: background-color 0.3s;
-
-                    .Tab__Mark {
-                        height: 32px;
-                        border-radius: 0px 10px 10px 0px;
-                    }
-
-                    .Tab__Mark--open {
-                        width: 7px;
-                        background-color: #464255;
-                    }
-
-                    .Tab__Mark--close {
-                        width: 5px;
-                        background-color: #d0d6de;
-                    }
-
-                    &:hover {
-                        .Tab__Mark {
-                            height: 32px;
-                            border-radius: 0px 10px 10px 0px;
-                            width: 7px;
-                            background-color: #d0d6de;
-                        }
-                    }
-                }
-
-                .tagsAndNumbers__Tab--close {
-                    background-color: white;
-                }
-            }
-
-            .tagsAndNumbers__panel {
-                width: 70%;
-                height: 100%;
-                background-color: #f5f4f9;
-                border-radius: 5px;
-            }
+        .tagsAndNumbers__panel {
+            width: 70%;
+            height: 100%;
+            background-color: #f5f4f9;
+            border-radius: 5px;
+            padding: 10px;
         }
     }
 }

@@ -1,31 +1,14 @@
 import { useContext, useState } from "react";
-import "./NumPanel.scss"
-import { PanelCreator, Panel } from "../PanelCreator"
+import "./NumPanelHook.scss"
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IFormulaPropsContext } from "../../FormulaRenderContentComponent";
-import { ITag } from "../../../@types/entities/tag";
-import TextArea from "../../../UI/TextArea/TextArea";
-import Toast from "../../../utils/toast";
-import { FormulaContext } from "../../../App";
+import { FormulaContext, IFormulaPropsContext, isOperationOrParenthesBefore } from "../../../FormulaRenderContentComponent";
+import TextArea from "../../../../UI/TextArea/TextArea";
+import Toast from "../../../../utils/toast";
 
 export type INumberKeys = "7" | "8" | "9" | "4" | "5" | "6" | "1" | "2" | "3" | "<-" | "0" | "."
 
-class NumPanelCreator extends PanelCreator {
-    public factoryMethod(): Panel {
-        return new NumPanel();
-    }
-}
-export default NumPanelCreator
-
-
-class NumPanel implements Panel {
-    public panelCreator(): JSX.Element {
-        return <NumPanelHook />
-    }
-}
-
-function NumPanelHook(): JSX.Element {
+export default function NumPanelHook(): JSX.Element {
 
     const [mainNumPanelVarible, setMainNumPanelVarible] = useState<string[]>([])
     const [numPanelTextArea, setNumPanelTextArea] = useState<string>("")
@@ -68,24 +51,11 @@ function NumPanelHook(): JSX.Element {
     //#region upload text to Formula
 
     const uploadOnClickHanlder = () => {
-        let value = propsContext!.mainVarible
+        let value = [...propsContext!.mainVarible]
 
-        if (value!.length === 0 || value![value!.length - 1] === "(" || value![value!.length - 1] === "+" || value![value!.length - 1] === "-" || value![value!.length - 1] === "*" || value![value!.length - 1] === "/") {
+        if (value!.length === 0 || isOperationOrParenthesBefore(value)) {
             if (mainNumPanelVarible.length !== 0) {
-                let concatedStringAndTagValueWithNumPanelValue = value!.concat([mainNumPanelVarible.join("") + " "])
-                propsContext!.setMainVarible!(concatedStringAndTagValueWithNumPanelValue)
-
-                // let stringArray: string[] = []
-                // propsContext!.mainVarible!.map((i, index) => {
-                //     if (typeof (i) === "string") {
-                //         stringArray.push(i)
-                //     } else {
-                //         stringArray.push((i as ITag).TID)
-                //     }
-                // })
-
-                // let concatedStringValueWithNumPanelValue = stringArray!.concat([mainNumPanelVarible.join("")])
-                // propsContext!.setFormulaTextArea!(concatedStringValueWithNumPanelValue.join(""))
+                propsContext!.setMainVarible(value!.concat([mainNumPanelVarible.join("") + " "]))
 
                 setMainNumPanelVarible([])
                 setNumPanelTextArea("")
