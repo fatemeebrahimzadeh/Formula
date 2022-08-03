@@ -202,7 +202,8 @@ const FormulaRenderContentComponent: FC<IProps> = (props) => {
             case "<-":
                 if (value.length !== 0) {
                     if (isTheParenthesForMultipleTags(value)) {
-                        for (let index = 0; index < countOfCharThatShouldPopForRemovingMultipleTagsCompletely(value); index++) {
+                        let countOfPop = countOfCharThatShouldPopForRemovingMultipleTagsCompletely(value)
+                        for (let index = 0; index < countOfPop; index++) {
                             value.pop()
                         }
                     } else {
