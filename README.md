@@ -1,4 +1,3 @@
 https://formulacalculator.surge.sh/
 
-the calculator saves all data about signals, so whenever you want to send data to the server, you can access every data of signal.
-Additionally, I used the factory design pattern for the panels of this calculator.
+This repository contains a calculator program that utilizes the factory design pattern to generate different panels. The program also features a data saving functionality that retains all signal-related data, allowing for easy access and transfer to a server.
